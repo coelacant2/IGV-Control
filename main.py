@@ -27,16 +27,16 @@ plt.xlim(-3,3)
 plt.ylim(-3,3)
 plt.show()
 
-def calculate(q, skipCompensation):
+def calculate(skipCompensation):
     global orientation
 
-    if not q.empty():
-        orientation = q.get()
+    #if not q.empty():
+    #    orientation = q.get()
 
     while motion.calculateStep(orientation, skipCompensation):
         displayMap()
-        if not q.empty():
-            orientation = q.get()
+        #if not q.empty():
+        #    orientation = q.get()
 
         sleep(0.001)
 
@@ -271,22 +271,22 @@ def squarePath(q):
     motion.rotate(True, 0.5, 180, 0, 0.25, 0.1)
     calculate(q, False)
 
-def line(q):
+def line():
     motion.rotate(True, 0.5, 720, 0, 0.1, 0.1)
-    calculate(q, True)
+    calculate(True)
 
     motion.rotate(True, 1, 20, 0, 0.1, 0.1)
-    calculate(q, False)
+    calculate(False)
 
     motion.move(True, 1, 10, 0.1, 0.1)
-    calculate(q, False)
+    calculate(False)
 
     motion.move(True, 1, -10, 0.1, 0.1)
-    calculate(q, False)
+    calculate(False)
 
-def spin(q):
+def spin():
     motion.rotate(True, 0.5, 720, 0, 0.1, 0.1)
-    calculate(q, True)
+    calculate(True)
 
 def reducePoints(points, range):
     reducedPoints = []
@@ -297,13 +297,11 @@ def reducePoints(points, range):
 
     return reducedPoints
 
-def handleMotion():
+def obstacleAvoidance():
     global points
     global position
     global orientation
-    #path1(q)
-    #line(q)
-    #squarePath(q)
+
     goal = [3, 2]
     position = [0.0, 0.0]
 
@@ -316,13 +314,13 @@ def handleMotion():
             break
 
         if len(points) > 1:
-            '''
+
             for i in range(12):
                 reducedPoints = reducePoints(points, mapRange + i / 0.25)
 
                 if len(reducedPoints) > 6:
                     break
-            '''
+
 
             fsYaw = dynamic_window_approach.getSpeedAndYaw(previousfsYaw, x, goal, points[::4])
 
@@ -347,6 +345,11 @@ def handleMotion():
             motion.setSpeedsRaw(left * 30.0, right * 30.0)
             previousfsYaw = fsYaw
 
+def handleMotion():
+    #path1(q)
+    line()
+    #squarePath(q)
+    
     #return None
 
 if __name__ == "__main__":
@@ -365,9 +368,9 @@ if __name__ == "__main__":
     lidarReadThread.start()
 
     try:
-        spin(mpuQueue)
-        points = []
-        sleep(2)
+        #spin(mpuQueue)
+        #points = []
+        #sleep(2)
         handleMotion()
         #while True:
         #    displayMap()

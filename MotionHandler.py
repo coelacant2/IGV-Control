@@ -55,7 +55,7 @@ class Motion:
 
 	def __init__(self, port, position: Vector2D, acceleration: float, wheelOffset: float, minVelocity: float, maxVelocity: float):
 		#self.motorControl = SMC(port, baudrate=115200, address=128, timeout=0.1)
-		self.pid = PID(0.075, 0.0, 0.05)
+		self.pid = PID(0.05, 0.0, 0.025)
 
 		self.acceleration = acceleration
 		self.wheelOffset  = wheelOffset
@@ -66,8 +66,11 @@ class Motion:
 		self.fig.show()
 
 	def setSpeeds(self, left: float, right: float):
-		left  = self.constrain(left * self.motorScalar + self.rotationBias,  -30.0, 30.0)
-		right = self.constrain(right * self.motorScalar - self.rotationBias,  -30.0, 30.0)
+		left  = self.constrain(left * self.motorScalar,   -40.0, 40.0)
+		right = self.constrain(right * self.motorScalar,  -40.0, 40.0)
+
+		left  = left  + self.rotationBias
+		right = right - self.rotationBias
 
 		#self.motorControl.drive(1, left)
 		#self.motorControl.drive(2, right)
